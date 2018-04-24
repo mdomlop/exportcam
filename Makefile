@@ -49,8 +49,11 @@ uninstall:
 	rm -rf $(PREFIX)/share/licenses/$(EXECUTABLE_NAME)/
 	rm -rf $(PREFIX)/share/doc/$(EXECUTABLE_NAME)/
 
-clean:
-	rm -rf version_update changelog.new *.xz *.gz *.tgz *.deb *.rpm /tmp/tmp.*.$(EXECUTABLE_NAME) debian/changelog debian/control debian/README debian/files debian/$(EXECUTABLE_NAME) debian/debhelper-build-stamp debian/$(EXECUTABLE_NAME)* pkg
+clean: debian_clean
+	rm -rf version_update changelog.update changelog.new *.xz *.gz *.tgz *.deb
+
+debian_clean:
+	debian/changelog debian/control debian/README debian/files debian/$(EXECUTABLE_NAME) debian/debhelper-build-stamp debian/$(EXECUTABLE_NAME)*
 
 purge: clean
 	rm README.md
