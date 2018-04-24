@@ -39,8 +39,7 @@ You can set the export directory by command line or by configuration file in
 Installation
 ------------
 
-You can choose between different installation methods. Note that uninstallation
-don't removes active zram disk.
+You can choose between different installation methods:
 
 ### Classic method ###
 
