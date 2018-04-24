@@ -1,0 +1,18 @@
+Source: exportcam
+Section: otherosfs
+Priority: optional
+Maintainer: Manuel Domínguez López <@mail@>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Homepage: https://github.com/mdomlop/exportcam
+
+Package: exportcam
+Architecture: all
+Provides: exportcam
+Conflicts: exportcam-git
+Depends:
+Description: Export photos and videos from digital cameras
+ Export photos and videos from digital cameras (such Android camera) to a local
+ storage.
+ Usually moving IMG_20180424_065600.jpg to
+ /data/photos/2018/04/20180424 065600.jpg

@@ -1,0 +1,10 @@
+PROGRAM_NAME=exportcam
+EXECUTABLE_NAME=exportcam
+DESCRIPTION=Export photos and videos from digital cameras
+VERSION=1
+AUTHOR=Manuel Domínguez López
+MAIL=zqbzybc@tznvy.pbz
+HOMEPAGE=http://github.com/mdomlop/exportcam
+SOURCE=http://github.com/mdomlop/exportcam
+LICENSE=GPL-3+
+
