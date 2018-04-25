@@ -10,20 +10,20 @@ else
     then
         album=$(cat "$config")
     else
-        echo Neither command line option nor configuration file exists.
-        echo -e "\nUse: exportcam /export/directory\n"
-        echo No action will be performed. Exiting.
+        >&2 echo Neither command line option nor configuration file exists.
+        >&2 echo -e "\nUse: exportcam /export/directory\n"
+        >&2 echo No action will be performed. Exiting.
         exit 1
     fi
 fi
 
 if [ ! -d "$album" ]
 then
-    echo Album directory not exits: $album
-    echo -e "\nPlease specify a valid one by command line:"
-    echo By example:
-    echo -e "\n\texportcam /data/album\n"
-    echo No action will be performed. Exiting.
+    >&2 echo Album directory not exits: $album
+    >&2 echo -e "\nPlease specify a valid one by command line:"
+    >&2 echo By example:
+    >&2 echo -e "\n\texportcam /data/album\n"
+    >&2 echo No action will be performed. Exiting.
     exit 2
 fi
 
@@ -77,7 +77,7 @@ do
         month='12-Diciembre'
         ;;
         *)
-        echo "Error to process month: $month"
+        >&2 echo "Error to process month: $month"
         exit 3
         ;;
     esac
