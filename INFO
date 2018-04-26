@@ -1,4 +1,4 @@
-PROGRAM_NAME=exportcam
+PROGRAM_NAME=ExportCam
 EXECUTABLE_NAME=exportcam
 DESCRIPTION=Export photos and videos from digital cameras
 VERSION=1
