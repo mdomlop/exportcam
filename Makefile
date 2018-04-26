@@ -1,11 +1,14 @@
 PREFIX = '/usr'
 DESTDIR = ''
-DOCS= changelog README.md AUTHORS
+DOCS = changelog README.md AUTHORS LICENSE copyright
+PROGRAM_NAME := $(shell grep ^PROGRAM_NAME INFO | cut -d= -f2)
 EXECUTABLE_NAME := $(shell grep ^EXECUTABLE_NAME INFO | cut -d= -f2)
 AUTHOR := $(shell grep ^AUTHOR INFO | cut -d= -f2)
 VERSION := $(shell grep ^VERSION INFO | cut -d= -f2)
+LICENSE := $(shell grep ^LICENSE INFO | cut -d= -f2)
 MAIL := $(shell grep ^MAIL INFO | cut -d= -f2 | tr '[A-Za-z]' '[N-ZA-Mn-za-m]')
 TIMESTAMP = $(shell LC_ALL=C date '+%a, %d %b %Y %T %z')
+YEAR = 2018
 
 default: README.md
 	@echo
@@ -24,41 +27,50 @@ changelog.update:
 changelog.new: changelog changelog.update
 	@cat changelog.update changelog > changelog.new
 	mv changelog.new changelog
+
+debian:
+	mkdir debian
+
+debian/compat: compat debian
+	cp compat $@
 	
-debian/changelog: changelog
-	sed s/@mail@/$(MAIL)/g $^ > $@
+debian/rules: rules debian
+	cp rules $@
+	
+debian/changelog: changelog debian
+	sed s/@mail@/$(MAIL)/g changelog > $@
 
-debian/control: control
-	sed s/@mail@/$(MAIL)/g $^ > $@
+debian/control: control debian
+	sed s/@mail@/$(MAIL)/g control > $@
 
-debian/README: README.md
+debian/README: README.md debian
 	cp README.md debian/README
+	
+debian/copyright: copyright debian
+	@echo Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/ > $@
+	@echo Upstream-Name: $(EXECUTABLE_NAME) >> $@
+	@echo "Upstream-Contact: Manuel Domínguez López <$(MAIL)>" >> $@
+	@echo Source: $(SOURCE) >> $@
+	@echo License: $(LICENSE) >> $@
+	@echo >> $@
+	@echo 'Files: *' >> $@
+	@echo "Copyright: $(YEAR) $(AUTHOR) <$(MAIL)>" >> $@
+	@echo License: $(LICENSE) >> $@
+	cat copyright >> $@
 
 README.md: readme.in
 	sed s/@version@/$(VERSION)/g $^ > $@
-	
-install: $(DOCS) 
-	install -d -m 755 $(DESTDIR)$(PREFIX)/share/doc/$(EXECUTABLE_NAME)
-	install -Dm 644 $^ $(DESTDIR)$(PREFIX)/share/doc/$(EXECUTABLE_NAME)
-	install -Dm 755 src/$(EXECUTABLE_NAME).sh $(DESTDIR)$(PREFIX)/bin/$(EXECUTABLE_NAME)
-	install -d -m 755 $(DESTDIR)$(PREFIX)/share/licenses/$(EXECUTABLE_NAME)
-	install -Dm 644 LICENSE $(DESTDIR)$(PREFIX)/share/licenses/$(EXECUTABLE_NAME)/COPYING
-
-uninstall:
-	rm -f $(PREFIX)/bin/$(EXECUTABLE_NAME)
-	rm -rf $(PREFIX)/share/licenses/$(EXECUTABLE_NAME)/
-	rm -rf $(PREFIX)/share/doc/$(EXECUTABLE_NAME)/
 
 clean: debian_clean
-	rm -rf version_update changelog.update changelog.new *.xz *.gz *.tgz *.deb
-
-debian_clean:
-	debian/changelog debian/control debian/README debian/files debian/$(EXECUTABLE_NAME) debian/debhelper-build-stamp debian/$(EXECUTABLE_NAME)*
+	rm -rf version_update changelog.* *.xz *.gz *.tgz *.deb
 
 purge: clean
 	rm README.md
 
-debian: debian/changelog debian/control debian/README
+debian_clean:
+	rm -rf debian
+
+debian_pkg: debian/compat debian/rules debian/changelog debian/control debian/README debian/copyright
 	#fakeroot debian/rules clean
 	#fakeroot debian/rules build
 	fakeroot debian/rules binary
@@ -66,3 +78,17 @@ debian: debian/changelog debian/control debian/README
 	@echo Package done!
 	@echo You can install it as root with:
 	@echo dpkg -i $(EXECUTABLE_NAME)_$(VERSION)_all.deb
+	
+install_docs: $(DOCS)
+	install -dm 755 $(DESTDIR)$(PREFIX)/share/doc/$(EXECUTABLE_NAME)
+	install -Dm 644 $(DOCS) $(DESTDIR)$(PREFIX)/share/doc/$(EXECUTABLE_NAME)
+
+install_executables: src/$(EXECUTABLE_NAME).sh
+	install -Dm 755 $^ $(DESTDIR)$(PREFIX)/bin/$(EXECUTABLE_NAME)
+	
+install: install_docs install_executables
+
+uninstall:
+	rm -f $(PREFIX)/bin/$(EXECUTABLE_NAME)
+	rm -rf $(PREFIX)/share/licenses/$(EXECUTABLE_NAME)/
+	rm -rf $(PREFIX)/share/doc/$(EXECUTABLE_NAME)/

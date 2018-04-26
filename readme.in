@@ -56,8 +56,8 @@ You can choose between different installation methods:
 
 - Build and install:
 
-        $ make debian
-        # dpkg -i exportcam_@version@.deb
+        $ make debian_pkg
+        # dpkg -i exportcam_@version@_all_.deb
 
 - Uninstall:
 

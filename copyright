@@ -1,11 +1,3 @@
-Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: snapman
-Source: https://github.com/mdomlop/snapman
-
-Files: debian/*
-Copyright: 2017 Manuel Domínguez López <mdomlop@gmail.com>
-License: GPL-3.0+
-
 License: GPL-3.0+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
